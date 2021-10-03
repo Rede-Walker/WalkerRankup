@@ -1,0 +1,6 @@
+name: Rankup
+version: ${project.version}
+main: br.com.redewalker.rankup.Rankup
+depend: [ WalkerAPI ]
+description: Sistemas do servidor de rankup da Rede Walker.
+website: https://www.redewalker.com.br
