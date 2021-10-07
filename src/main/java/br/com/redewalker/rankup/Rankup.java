@@ -4,9 +4,9 @@ import br.com.redewalker.api.API;
 import br.com.redewalker.rankup.commands.CoinsCommand;
 import br.com.redewalker.rankup.listeners.JoinEvents;
 import br.com.redewalker.rankup.manager.CoinsRankingManager;
-import br.com.redewalker.rankup.manager.RankupPlayerManager;
+import br.com.redewalker.rankup.manager.RankPlayerManager;
 import br.com.redewalker.rankup.objects.CoinsRanking;
-import br.com.redewalker.rankup.objects.RankupPlayer;
+import br.com.redewalker.rankup.objects.RankPlayer;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,16 +19,16 @@ import java.util.stream.Collectors;
 public final class Rankup extends JavaPlugin {
 
     @Getter public static Rankup rankup;
-    @Getter private RankupPlayerManager rankupPlayerManager;
+    @Getter private RankPlayerManager rankPlayerManager;
     @Getter private CoinsRankingManager coinsRankingManager;
 
     @Override
     public void onEnable() {
         rankup = this;
-        this.rankupPlayerManager = new RankupPlayerManager(this);
-        this.rankupPlayerManager.load();
+        this.rankPlayerManager = new RankPlayerManager(this);
+        this.rankPlayerManager.load();
         this.coinsRankingManager = new CoinsRankingManager();
-        API.getInstance().getCommons().registerManager(this.rankupPlayerManager);
+        API.getInstance().getCommons().registerManager(this.rankPlayerManager);
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::updateCoinsRanking, 20L, 600 * 20L);
 
 
@@ -38,7 +38,7 @@ public final class Rankup extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        API.getInstance().getCommons().unregisterManager(this.rankupPlayerManager);
+        API.getInstance().getCommons().unregisterManager(this.rankPlayerManager);
     }
 
 
@@ -46,21 +46,21 @@ public final class Rankup extends JavaPlugin {
     public void updateCoinsRanking(){
         coinsRankingManager.getRanking().clear();
 
-        final List<RankupPlayer> rankupPlayers = rankupPlayerManager.getRankupPlayers()
+        final List<RankPlayer> rankPlayers = rankPlayerManager.getRankupPlayers()
                 .stream()
-                .sorted(Comparator.comparingDouble(RankupPlayer::getCoins).reversed())
+                .sorted(Comparator.comparingDouble(RankPlayer::getCoins).reversed())
                 .collect(Collectors.toList());
 
-        for (int position = 0; position < rankupPlayers.size(); position++) {
-            RankupPlayer rankupPlayer = rankupPlayers.get(position);
+        for (int position = 0; position < rankPlayers.size(); position++) {
+            RankPlayer rankPlayer = rankPlayers.get(position);
 
             final CoinsRanking ranking = CoinsRanking.builder()
-                    .name(rankupPlayer.getName())
+                    .name(rankPlayer.getName())
                     .position((position + 1))
-                    .coins(rankupPlayer.getCoins())
+                    .coins(rankPlayer.getCoins())
                     .build();
 
-            rankupPlayer.setRanking(ranking);
+            rankPlayer.setRanking(ranking);
 
             coinsRankingManager.getRanking().add(ranking);
         }

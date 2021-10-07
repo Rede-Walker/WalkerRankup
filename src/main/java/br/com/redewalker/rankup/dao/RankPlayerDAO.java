@@ -2,13 +2,12 @@ package br.com.redewalker.rankup.dao;
 
 import br.com.redewalker.api.API;
 import br.com.redewalker.common.database.daos.MongoDBDao;
-import br.com.redewalker.rankup.objects.RankupPlayer;
-import com.mongodb.BasicDBObject;
+import br.com.redewalker.rankup.objects.RankPlayer;
 
-public class RankupPlayerDAO extends MongoDBDao<RankupPlayer> {
+public class RankPlayerDAO extends MongoDBDao<RankPlayer> {
 
-    public RankupPlayerDAO() {
-        super(RankupPlayer.class, API.getInstance().getMongoDB(), "testes", API.getInstance().getServerName());
+    public RankPlayerDAO() {
+        super(RankPlayer.class, API.getInstance().getMongoDB(), "testes", API.getInstance().getServerName());
     }
 
     @Override

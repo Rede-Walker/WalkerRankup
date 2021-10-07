@@ -4,8 +4,9 @@ import br.com.redewalker.common.Manager;
 import br.com.redewalker.common.database.daos.MongoDBDao;
 import br.com.redewalker.common.database.exceptions.ValueNotFoundException;
 import br.com.redewalker.rankup.Rankup;
-import br.com.redewalker.rankup.dao.RankupPlayerDAO;
-import br.com.redewalker.rankup.objects.RankupPlayer;
+import br.com.redewalker.rankup.dao.RankPlayerDAO;
+import br.com.redewalker.rankup.objects.RankPlayer;
+import br.com.redewalker.rankup.objects.enums.Preference;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
@@ -13,43 +14,47 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class RankupPlayerManager extends Manager<RankupPlayer, Rankup> {
+public class RankPlayerManager extends Manager<RankPlayer, Rankup> {
 
-    private final RankupPlayerDAO dao;
-    @Getter private final HashMap<String, RankupPlayer> rankupPlayerHashMap;
+    private final RankPlayerDAO dao;
+    @Getter private final HashMap<String, RankPlayer> rankupPlayerHashMap;
 
-    public RankupPlayerManager(Rankup plugin) {
+    public RankPlayerManager(Rankup plugin) {
         super(plugin);
-        this.dao = new RankupPlayerDAO();
+        this.dao = new RankPlayerDAO();
         this.rankupPlayerHashMap = new HashMap<>();
     }
 
-    public List<RankupPlayer> getRankupPlayers(){
+    public List<RankPlayer> getRankupPlayers(){
         return new ArrayList<>(rankupPlayerHashMap.values());
     }
 
     public void handleRankupPlayerCreation(String nickname){
         if(!rankupPlayerHashMap.containsKey(nickname.toLowerCase())){
-            RankupPlayer rankupPlayer = createRankupPlayer(nickname);
-            this.rankupPlayerHashMap.put(nickname.toLowerCase(), rankupPlayer);
+            RankPlayer rankPlayer = createRankupPlayer(nickname);
+            this.rankupPlayerHashMap.put(nickname.toLowerCase(), rankPlayer);
         }
     }
 
-    public RankupPlayer getRankupPlayer(String nickname){
+    public RankPlayer getRankupPlayer(String nickname){
         return rankupPlayerHashMap.get(nickname.toLowerCase());
     }
 
-    private RankupPlayer createRankupPlayer(String nickname) {
-        RankupPlayer rankupPlayer;
+    private RankPlayer createRankupPlayer(String nickname) {
+        RankPlayer rankPlayer;
         try {
-            rankupPlayer = this.dao.find(this.dao.getData().getKey(RankupPlayer.builder().name(nickname).build()));
+            rankPlayer = this.dao.find(this.dao.getData().getKey(RankPlayer.builder().name(nickname).build()));
         } catch (ValueNotFoundException e) {
-            rankupPlayer = RankupPlayer.builder()
+            HashMap<Preference, Boolean> hashmap = new HashMap<>();
+            hashmap.put(Preference.RECEIVE_COINS, true);
+            rankPlayer = RankPlayer.builder()
                     .name(nickname)
+                    .preferences(hashmap)
                     .build();
+            this.dao.createObject(rankPlayer);
         }
 
-        return rankupPlayer;
+        return rankPlayer;
     }
 
     @Override
@@ -79,12 +84,17 @@ public class RankupPlayerManager extends Manager<RankupPlayer, Rankup> {
     }
 
     @Override
-    public RankupPlayer getObjectUpdated(String s) {
+    public RankPlayer getObjectUpdated(String s) {
         return null;
     }
 
     @Override
-    public MongoDBDao<RankupPlayer> getDao() {
+    public RankPlayer getObjectUpdated(Object o) {
+        return null;
+    }
+
+    @Override
+    public MongoDBDao<RankPlayer> getDao() {
         return this.dao;
     }
 }

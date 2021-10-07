@@ -3,22 +3,28 @@ package br.com.redewalker.rankup.objects;
 import br.com.redewalker.common.database.models.annotations.Key;
 import br.com.redewalker.common.database.models.annotations.Storable;
 import br.com.redewalker.rankup.Rankup;
+import br.com.redewalker.rankup.objects.enums.Attribute;
+import br.com.redewalker.rankup.objects.enums.Preference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
+
 @Storable("rankup_player")
 @AllArgsConstructor
 @Builder
 @Getter
-public class RankupPlayer {
+public class RankPlayer {
 
     @Key private String name;
     @Builder.Default private double coins = 0;
+    private HashMap<Preference, Boolean> preferences;
+    private HashMap<Attribute, Integer> attributes;
     @Setter private transient CoinsRanking ranking;
 
-    public RankupPlayer() {}
+    public RankPlayer() {}
 
     public void setCoins(double x){
         if(x < 0) x = 0;
@@ -35,8 +41,18 @@ public class RankupPlayer {
         save();
     }
 
+    public void setPreference(Preference preference, boolean value){
+        preferences.put(preference, value);
+        save();
+    }
+
+    public void setAttribute(Attribute attribute, int level){
+        attributes.put(attribute, level);
+        save();
+    }
+
     public void save(){
-        Rankup.getRankup().getRankupPlayerManager().getDao().saveEntity(this);
+        Rankup.getRankup().getRankPlayerManager().getDao().saveEntity(this);
     }
 
 }
