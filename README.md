@@ -1,6 +1,6 @@
 # Sistema principal para o primeiro servidor RANKUP da Rede Walker.
 
-##To-do list
+<h2>To-do list</h2>
    - [ ] Sistema de atributos
    - [ ] Sistema de mineração
    - [ ] Definir nome dos ranks
