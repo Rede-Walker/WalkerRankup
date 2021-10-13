@@ -4,6 +4,7 @@ import br.com.redewalker.api.API;
 import br.com.redewalker.rankup.commands.CoinsCommand;
 import br.com.redewalker.rankup.listeners.JoinEvents;
 import br.com.redewalker.rankup.manager.CoinsRankingManager;
+import br.com.redewalker.rankup.manager.RankManager;
 import br.com.redewalker.rankup.manager.RankPlayerManager;
 import br.com.redewalker.rankup.objects.CoinsRanking;
 import br.com.redewalker.rankup.objects.RankPlayer;
@@ -15,12 +16,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
 public final class Rankup extends JavaPlugin {
 
     @Getter public static Rankup rankup;
     @Getter private RankPlayerManager rankPlayerManager;
     @Getter private CoinsRankingManager coinsRankingManager;
+    @Getter private RankManager rankManager;
 
     @Override
     public void onEnable() {
@@ -28,6 +29,8 @@ public final class Rankup extends JavaPlugin {
         this.rankPlayerManager = new RankPlayerManager(this);
         this.rankPlayerManager.load();
         this.coinsRankingManager = new CoinsRankingManager();
+        this.rankManager = new RankManager(this);
+        API.getInstance().getCommons().registerManager(this.rankManager);
         API.getInstance().getCommons().registerManager(this.rankPlayerManager);
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::updateCoinsRanking, 20L, 600 * 20L);
 
@@ -39,6 +42,7 @@ public final class Rankup extends JavaPlugin {
     @Override
     public void onDisable() {
         API.getInstance().getCommons().unregisterManager(this.rankPlayerManager);
+        API.getInstance().getCommons().unregisterManager(this.rankManager);
     }
 
 

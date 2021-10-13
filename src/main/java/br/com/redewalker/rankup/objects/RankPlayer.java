@@ -20,11 +20,27 @@ public class RankPlayer {
 
     @Key private String name;
     @Builder.Default private double coins = 0;
+    @Builder.Default private double rankpoints = 0;
     private HashMap<Preference, Boolean> preferences;
     private HashMap<Attribute, Integer> attributes;
     @Setter private transient CoinsRanking ranking;
 
     public RankPlayer() {}
+
+    public void setRankpoints(double x){
+        if(x < 0) x = 0;
+        this.rankpoints = x; save();
+    }
+
+    public void addRankpoints(double x){
+        this.rankpoints += x; save();
+    }
+
+    public void removeRankpoints(double x){
+        if((this.rankpoints - x) < 0) this.rankpoints = 0;
+        else this.rankpoints -= x;
+        save();
+    }
 
     public void setCoins(double x){
         if(x < 0) x = 0;
