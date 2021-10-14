@@ -46,12 +46,12 @@ public class RankManager extends Manager<Rank, Rankup> {
     }
 
 
-    public void handleRankCreation(int rankPosition, String name, String tag, boolean first, boolean last){
-        if(!ranks.containsKey(rankPosition)){
+    public void handleRankCreation(int rankPosition, String name, String tag, boolean first, boolean last) {
+        if (!ranks.containsKey(rankPosition)) {
             Rank rank;
             try {
                 rank = getRank(rankPosition);
-            }catch(ValueNotFoundException e){
+            } catch (ValueNotFoundException e) {
                 rank = Rank.builder()
                         .position(rankPosition)
                         .name(name)
@@ -62,13 +62,12 @@ public class RankManager extends Manager<Rank, Rankup> {
                 this.rankDAO.createObject(rank);
             }
             this.ranks.put(rankPosition, rank);
-        }else{
+        } else {
             System.out.println("Já existe um rank com essa posição! #" + rankPosition);
         }
     }
 
-
-    public Rank getRank(int rankPosition) throws ValueNotFoundException{
+    public Rank getRank(int rankPosition) throws ValueNotFoundException {
         return this.rankDAO.find(this.rankDAO.getData().getKey(Rank.builder().position(rankPosition).build()));
     }
 
@@ -76,7 +75,6 @@ public class RankManager extends Manager<Rank, Rankup> {
     public void load() {
         this.rankDAO.findAll().forEach(r->
             this.ranks.put(r.getPosition(), r) );
-        System.out.println(ranks);
     }
 
     @SneakyThrows

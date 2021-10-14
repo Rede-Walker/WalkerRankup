@@ -31,6 +31,7 @@ public final class Rankup extends JavaPlugin {
         this.rankPlayerManager = new RankPlayerManager(this);
         this.rankPlayerManager.load();
         this.coinsRankingManager = new CoinsRankingManager();
+        this.rankManager = new RankManager(this);
         API.getInstance().getCommons().registerManager(this.rankManager);
         API.getInstance().getCommons().registerManager(this.rankPlayerManager);
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::updateCoinsRanking, 20L, 600 * 20L);
