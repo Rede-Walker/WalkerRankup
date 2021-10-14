@@ -27,7 +27,6 @@ public final class Rankup extends JavaPlugin {
     public void onEnable() {
         rankup = this;
         this.rankManager = new RankManager(this);
-        this.rankManager.load();
         this.rankPlayerManager = new RankPlayerManager(this);
         this.rankPlayerManager.load();
         this.coinsRankingManager = new CoinsRankingManager();
@@ -39,6 +38,7 @@ public final class Rankup extends JavaPlugin {
 
         new CoinsCommand(this);
         Bukkit.getPluginManager().registerEvents(new JoinEvents(), this);
+
     }
 
     @Override

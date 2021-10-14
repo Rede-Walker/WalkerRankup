@@ -10,30 +10,36 @@ import br.com.redewalker.rankup.objects.enums.Ranks;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RankManager extends Manager<Rank, Rankup> {
 
     @Getter private final RankDAO rankDAO;
-    @Getter private final HashMap<Integer, Rank> ranks;
+    @Getter private final List<Rank> ranks;
 
     public RankManager(Rankup plugin) {
         super(plugin);
         this.rankDAO = new RankDAO();
-        this.ranks = new HashMap<>();
+        this.ranks = new ArrayList<>();
+        load();
         checkData();
+    }
+
+    public void debug(){
+        ranks.stream().forEach(r-> System.out.println(r.getPosition() + " - " + r.getName()));
     }
 
     public void checkData(){
         for(Ranks rank : Ranks.values()){
-            handleRankCreation(rank.getRankPosition(), rank.getName(), rank.getTag(), rank.isFirst(), rank.isLast());
+            handleRankCreation(rank.getRankPosition(), rank.getName(), rank.getTag(), rank.isFirst(), rank.isLast(), false);
         }
 
     }
 
     public boolean isLastRank(Rank rank){
         int nextRank = rank.getPosition() + 1;
-        return !ranks.containsKey(nextRank);
+        return ranks.get(nextRank) == null;
     }
 
     public Rank getNextRank(Rank rank){
@@ -42,12 +48,12 @@ public class RankManager extends Manager<Rank, Rankup> {
     }
 
     public Rank getDefaultRank(){
-        return ranks.values().stream().filter(rank -> rank.isFirst()).findFirst().orElse(null);
+        return ranks.stream().filter(rank -> rank.isFirst()).findFirst().orElse(null);
     }
 
 
-    public void handleRankCreation(int rankPosition, String name, String tag, boolean first, boolean last) {
-        if (!ranks.containsKey(rankPosition)) {
+    public void handleRankCreation(int rankPosition, String name, String tag, boolean first, boolean last, boolean debug) {
+        if (ranks.isEmpty() || ranks.get(rankPosition) == null) {
             Rank rank;
             try {
                 rank = getRank(rankPosition);
@@ -61,9 +67,9 @@ public class RankManager extends Manager<Rank, Rankup> {
                         .build();
                 this.rankDAO.createObject(rank);
             }
-            this.ranks.put(rankPosition, rank);
+            this.ranks.add(rankPosition, rank);
         } else {
-            System.out.println("Já existe um rank com essa posição! #" + rankPosition);
+            if(debug) System.out.println("Já existe um rank com essa posição! #" + rankPosition);
         }
     }
 
@@ -73,8 +79,9 @@ public class RankManager extends Manager<Rank, Rankup> {
 
     @Override
     public void load() {
-        this.rankDAO.findAll().forEach(r->
-            this.ranks.put(r.getPosition(), r) );
+        this.rankDAO.findAll().stream().forEach(rank -> {
+            if(ranks.isEmpty() || !ranks.contains(rank)) ranks.add(rank.getPosition(), rank);
+        });
     }
 
     @SneakyThrows
