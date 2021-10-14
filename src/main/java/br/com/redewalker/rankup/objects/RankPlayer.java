@@ -20,11 +20,28 @@ public class RankPlayer {
 
     @Key private String name;
     @Builder.Default private double coins = 0;
+    @Builder.Default private double rankpoints = 0;
+    private Rank rank;
     private HashMap<Preference, Boolean> preferences;
     private HashMap<Attribute, Integer> attributes;
     @Setter private transient CoinsRanking ranking;
 
     public RankPlayer() {}
+
+    public void setRankpoints(double x){
+        if(x < 0) x = 0;
+        this.rankpoints = x; save();
+    }
+
+    public void addRankpoints(double x){
+        this.rankpoints += x; save();
+    }
+
+    public void removeRankpoints(double x){
+        if((this.rankpoints - x) < 0) this.rankpoints = 0;
+        else this.rankpoints -= x;
+        save();
+    }
 
     public void setCoins(double x){
         if(x < 0) x = 0;
@@ -49,6 +66,16 @@ public class RankPlayer {
     public void setAttribute(Attribute attribute, int level){
         attributes.put(attribute, level);
         save();
+    }
+
+    public boolean rankup(){
+        if(Rankup.getRankup().getRankManager().isLastRank(this.rank)) return false;
+        if(Rankup.getRankup().getRankManager().getNextRank(this.rank).getCost() > this.rankpoints) return false;
+        Rank nextRank = Rankup.getRankup().getRankManager().getNextRank(this.rank);
+        this.rank = nextRank;
+        save();
+
+        return true;
     }
 
     public void save(){

@@ -50,6 +50,7 @@ public class RankPlayerManager extends Manager<RankPlayer, Rankup> {
             rankPlayer = RankPlayer.builder()
                     .name(nickname)
                     .preferences(hashmap)
+                    .rank(Rankup.getRankup().getRankManager().getDefaultRank())
                     .build();
             this.dao.createObject(rankPlayer);
         }
