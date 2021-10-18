@@ -36,6 +36,15 @@ public class RankPlayer {
         this.virtualChests.add(chest); save();
     }
 
+    public void addVirtualChest(){
+        VirtualChest virtualChest = new VirtualChest(name, getNextVirtualChestId());
+        virtualChests.add(virtualChest); save();
+    }
+
+    private int getNextVirtualChestId(){
+        return virtualChests.size() + 1;
+    }
+
     public void removeVirtualChest(VirtualChest chest){
         this.virtualChests.remove(chest); save();
     }
