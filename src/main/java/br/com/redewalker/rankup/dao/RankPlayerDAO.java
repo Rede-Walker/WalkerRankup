@@ -1,7 +1,7 @@
 package br.com.redewalker.rankup.dao;
 
 import br.com.redewalker.api.API;
-import br.com.redewalker.common.database.daos.MongoDBDao;
+import br.com.redewalker.api.database.daos.MongoDBDao;
 import br.com.redewalker.rankup.objects.RankPlayer;
 
 public class RankPlayerDAO extends MongoDBDao<RankPlayer> {

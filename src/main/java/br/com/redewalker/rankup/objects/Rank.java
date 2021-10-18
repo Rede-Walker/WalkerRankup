@@ -1,7 +1,7 @@
 package br.com.redewalker.rankup.objects;
 
-import br.com.redewalker.common.database.models.annotations.Key;
-import br.com.redewalker.common.database.models.annotations.Storable;
+import br.com.redewalker.api.database.models.annotations.Key;
+import br.com.redewalker.api.database.models.annotations.Storable;
 import br.com.redewalker.rankup.Rankup;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,8 @@ import lombok.Getter;
 @Getter
 public class Rank {
 
-    @Key private int position;
+    @Key
+    private int position;
     private String name;
     private String tag;
     private double cost;

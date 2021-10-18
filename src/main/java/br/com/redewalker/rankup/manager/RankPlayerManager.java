@@ -1,8 +1,8 @@
 package br.com.redewalker.rankup.manager;
 
-import br.com.redewalker.common.Manager;
-import br.com.redewalker.common.database.daos.MongoDBDao;
-import br.com.redewalker.common.database.exceptions.ValueNotFoundException;
+import br.com.redewalker.api.basics.Manager;
+import br.com.redewalker.api.database.daos.MongoDBDao;
+import br.com.redewalker.api.database.exceptions.ValueNotFoundException;
 import br.com.redewalker.rankup.Rankup;
 import br.com.redewalker.rankup.dao.RankPlayerDAO;
 import br.com.redewalker.rankup.objects.RankPlayer;
@@ -13,6 +13,7 @@ import lombok.SneakyThrows;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class RankPlayerManager extends Manager<RankPlayer, Rankup> {
 
@@ -85,12 +86,12 @@ public class RankPlayerManager extends Manager<RankPlayer, Rankup> {
     }
 
     @Override
-    public RankPlayer getObjectUpdated(String s) {
+    public CompletableFuture<RankPlayer> getObjectUpdated(String s) {
         return null;
     }
 
     @Override
-    public RankPlayer getObjectUpdated(Object o) {
+    public CompletableFuture<RankPlayer> getObjectUpdated(Object o) {
         return null;
     }
 

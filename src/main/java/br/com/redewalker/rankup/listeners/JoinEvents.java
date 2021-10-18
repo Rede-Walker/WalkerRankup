@@ -1,8 +1,8 @@
 package br.com.redewalker.rankup.listeners;
 
+import br.com.redewalker.api.database.exceptions.JsonSerializeException;
+import br.com.redewalker.api.database.objects.ObjectForSave;
 import br.com.redewalker.api.events.PlayerPreQuitEvent;
-import br.com.redewalker.common.database.exceptions.JsonSerializeException;
-import br.com.redewalker.common.database.objects.ObjectForSave;
 import br.com.redewalker.rankup.Rankup;
 import br.com.redewalker.rankup.dao.RankPlayerDAO;
 import br.com.redewalker.rankup.objects.RankPlayer;

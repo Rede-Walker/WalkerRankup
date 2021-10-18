@@ -1,7 +1,7 @@
 package br.com.redewalker.rankup.objects;
 
-import br.com.redewalker.common.database.models.annotations.Key;
-import br.com.redewalker.common.database.models.annotations.Storable;
+import br.com.redewalker.api.database.models.annotations.Key;
+import br.com.redewalker.api.database.models.annotations.Storable;
 import br.com.redewalker.rankup.Rankup;
 import br.com.redewalker.rankup.objects.enums.Attribute;
 import br.com.redewalker.rankup.objects.enums.Preference;
@@ -10,7 +10,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Storable("rankup_player")
 @AllArgsConstructor
@@ -18,15 +20,29 @@ import java.util.HashMap;
 @Getter
 public class RankPlayer {
 
-    @Key private String name;
+    @Key
+    private String name;
     @Builder.Default private double coins = 0;
     @Builder.Default private double rankpoints = 0;
+    @Builder.Default private List<VirtualChest> virtualChests = new ArrayList<>();
     private Rank rank;
     private HashMap<Preference, Boolean> preferences;
     private HashMap<Attribute, Integer> attributes;
     @Setter private transient CoinsRanking ranking;
 
     public RankPlayer() {}
+
+    public void addVirtualChest(VirtualChest chest){
+        this.virtualChests.add(chest); save();
+    }
+
+    public void removeVirtualChest(VirtualChest chest){
+        this.virtualChests.remove(chest); save();
+    }
+
+    public void setVirtualChests(List<VirtualChest> virtualChests){
+        this.virtualChests = virtualChests; save();
+    }
 
     public void setRankpoints(double x){
         if(x < 0) x = 0;
