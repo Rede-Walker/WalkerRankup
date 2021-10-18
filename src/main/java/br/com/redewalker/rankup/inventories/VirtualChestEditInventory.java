@@ -44,7 +44,7 @@ public class VirtualChestEditInventory {
         GuiItem iconsItem = new GuiItem(new ItemBuilder(virtualChest.getChestIcon()).setName(ChatColor.YELLOW + "Ícone").setLore(Collections.singletonList(
                 ChatColor.WHITE + "Clique para alterar o ícone do baú.")).toItemStack());
         iconsItem.setAction(action->{
-            // OPEN ICON SELECTOR INVENTORY
+            new VirtualChestIconChangeInventory((Player) action.getWhoClicked(), virtualChest).open();
         });
 
         GuiItem renameItem = new GuiItem(new ItemBuilder(Material.NAME_TAG).setName(ChatColor.YELLOW + "Renomear").setLore(Collections.singletonList(
@@ -81,6 +81,46 @@ public class VirtualChestEditInventory {
 
     public void open(){
         this.gui.open(this.player);
+    }
+
+    private class VirtualChestIconChangeInventory{
+
+        @Getter private final Gui gui;
+        @Getter private final Player player;
+        @Getter private final VirtualChest virtualChest;
+        @Getter private final User user;
+
+        public VirtualChestIconChangeInventory(Player player, VirtualChest virtualChest){
+            this.player = player;
+            this.virtualChest = virtualChest;
+            this.user = API.getInstance().getUserManager().getUser(player.getName());
+            this.gui = Gui.gui().title(Component.text("Alterando ícone do baú virtual")).rows(6).create();
+
+            this.gui.disableAllInteractions();
+            int last = 0;
+            for(int slot = 0; slot < 55; slot++){
+                if(last >= Rankup.getRankup().getVirtualChestManager().getIconList().size()) break;
+
+                this.gui.setItem(slot, createGuiItem(Rankup.getRankup().getVirtualChestManager().getIconList().get(last)));
+                last++;
+            }
+        }
+
+        public void open(){
+            this.gui.open(this.player);
+        }
+
+        private GuiItem createGuiItem(Material material){
+            GuiItem guiItem = new GuiItem(material);
+            guiItem.setAction(action->{
+                action.getWhoClicked().sendMessage(ChatColor.GREEN + "Ícone do baú virtual alterado com sucesso!");
+                action.getWhoClicked().closeInventory();
+                this.virtualChest.setMaterial(guiItem.getItemStack().getType());
+                Rankup.getRankup().getRankPlayerManager().getDao().saveEntity(Rankup.getRankup().getRankPlayerManager().getRankupPlayer(player.getName()));
+                ((Player)action.getWhoClicked()).playSound(action.getWhoClicked().getLocation(), Sound.VILLAGER_YES, 1.0F, 1.0F);
+            });
+            return guiItem;
+        }
     }
 
     private class VirtualChestUpgradeShopInventory{

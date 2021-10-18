@@ -46,14 +46,29 @@ public class ChestCommand extends Command {
             return true;
         }
 
-        for(VirtualChest virtualChest : rankPlayer.getVirtualChests()){
-            if(virtualChest.getChestId() == id){
-                player.openInventory(virtualChest.getInventory());
-            }else{
-                player.sendMessage(ChatColor.RED + "Você não possui o baú #" + id + "!");
-            }
+        VirtualChest virtualChest = getByID(id, rankPlayer);
+        if(virtualChest == null){
+            player.sendMessage(ChatColor.RED + "Você não possui o baú #" + id + "!");
+        }else{
+            player.openInventory(virtualChest.getInventory());
         }
 
+        return false;
+    }
+    
+    private VirtualChest getByID(int id, RankPlayer rankPlayer){
+        if(!hasByID(id, rankPlayer)) return null;
+        VirtualChest virtualChest = null;
+        for(VirtualChest virtualChest1 : rankPlayer.getVirtualChests()){
+            if(virtualChest1.getChestId() == id) virtualChest = virtualChest1;
+        }
+        return virtualChest;
+    }
+    
+    private boolean hasByID(int id, RankPlayer rankPlayer){
+        for(VirtualChest virtualChest : rankPlayer.getVirtualChests()){
+            if(virtualChest.getChestId() == id) return true;
+        }
         return false;
     }
 }
