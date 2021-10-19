@@ -4,6 +4,7 @@ import br.com.redewalker.api.commands.Command;
 import br.com.redewalker.api.systems.messages.MessageManager;
 import br.com.redewalker.api.systems.messages.enums.Messages;
 import br.com.redewalker.rankup.Rankup;
+import br.com.redewalker.rankup.systems.virtualchests.inventories.VirtualChestAdminInventory;
 import br.com.redewalker.rankup.systems.virtualchests.inventories.VirtualChestInventory;
 import br.com.redewalker.rankup.systems.rankplayer.RankPlayer;
 import br.com.redewalker.rankup.systems.virtualchests.VirtualChest;
@@ -47,13 +48,30 @@ public class ChestCommand extends Command {
                     return true;
                 }
 
-                if(args.length == 1){
-
-                    // OPEN INVENTORY AS TARGET;
+                if(rankPlayerTarget.getVirtualChests().isEmpty()){
+                    MessageManager.instance().messageCustom("<error>O jogador informado não possui baús.").send(player);
                     return true;
                 }
 
+                if(args.length == 1){
+                    new VirtualChestAdminInventory(player, rankPlayerTarget).open();
+                    return true;
+                }
 
+                String b = args[1];
+                try{
+                    id = Integer.parseInt(b);
+                }catch(NumberFormatException ex){
+                    MessageManager.instance().messageCustom("<error>Apenas números.").send(player);
+                    return true;
+                }
+
+                VirtualChest virtualChest = getByID(id, rankPlayerTarget);
+                if(virtualChest == null){
+                    MessageManager.instance().messageCustom("<error>Esse jogador não possui o baú #" + id + ".").send(player);
+                }else{
+                    player.openInventory(virtualChest.getInventory());
+                }
 
                 return true;
             }
