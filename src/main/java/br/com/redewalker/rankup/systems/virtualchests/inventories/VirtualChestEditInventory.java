@@ -1,12 +1,12 @@
-package br.com.redewalker.rankup.inventories;
+package br.com.redewalker.rankup.systems.virtualchests.inventories;
 
 import br.com.redewalker.api.API;
 import br.com.redewalker.api.systems.users.User;
 import br.com.redewalker.api.utils.ItemBuilder;
 import br.com.redewalker.rankup.Rankup;
 import br.com.redewalker.rankup.listeners.VirtualChestListeners;
-import br.com.redewalker.rankup.objects.VirtualChest;
-import br.com.redewalker.rankup.objects.enums.VirtualChestType;
+import br.com.redewalker.rankup.systems.virtualchests.VirtualChest;
+import br.com.redewalker.rankup.systems.virtualchests.enums.VirtualChestType;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
 import lombok.Getter;

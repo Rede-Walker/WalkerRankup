@@ -1,4 +1,4 @@
-package br.com.redewalker.rankup.objects.enums;
+package br.com.redewalker.rankup.systems.rank.enums;
 
 import lombok.Getter;
 

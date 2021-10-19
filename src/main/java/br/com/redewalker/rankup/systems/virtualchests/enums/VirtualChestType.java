@@ -1,4 +1,4 @@
-package br.com.redewalker.rankup.objects.enums;
+package br.com.redewalker.rankup.systems.virtualchests.enums;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package br.com.redewalker.rankup.objects;
+package br.com.redewalker.rankup.systems.rank;
 
 import br.com.redewalker.api.database.models.annotations.Key;
 import br.com.redewalker.api.database.models.annotations.Storable;

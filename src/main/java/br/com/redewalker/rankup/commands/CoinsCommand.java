@@ -2,9 +2,9 @@ package br.com.redewalker.rankup.commands;
 
 import br.com.redewalker.api.commands.Command;
 import br.com.redewalker.rankup.Rankup;
-import br.com.redewalker.rankup.objects.CoinsRanking;
-import br.com.redewalker.rankup.objects.RankPlayer;
-import br.com.redewalker.rankup.objects.enums.Preference;
+import br.com.redewalker.rankup.systems.rankplayer.coins.CoinsRanking;
+import br.com.redewalker.rankup.systems.rankplayer.RankPlayer;
+import br.com.redewalker.rankup.systems.rankplayer.enums.Preference;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

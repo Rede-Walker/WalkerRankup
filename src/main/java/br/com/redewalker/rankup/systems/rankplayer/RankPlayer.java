@@ -1,10 +1,13 @@
-package br.com.redewalker.rankup.objects;
+package br.com.redewalker.rankup.systems.rankplayer;
 
 import br.com.redewalker.api.database.models.annotations.Key;
 import br.com.redewalker.api.database.models.annotations.Storable;
 import br.com.redewalker.rankup.Rankup;
-import br.com.redewalker.rankup.objects.enums.Attribute;
-import br.com.redewalker.rankup.objects.enums.Preference;
+import br.com.redewalker.rankup.systems.rankplayer.coins.CoinsRanking;
+import br.com.redewalker.rankup.systems.rank.enums.Attribute;
+import br.com.redewalker.rankup.systems.rankplayer.enums.Preference;
+import br.com.redewalker.rankup.systems.rank.Rank;
+import br.com.redewalker.rankup.systems.virtualchests.VirtualChest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

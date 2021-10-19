@@ -1,4 +1,4 @@
-package br.com.redewalker.rankup.objects;
+package br.com.redewalker.rankup.systems.rankplayer.coins;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

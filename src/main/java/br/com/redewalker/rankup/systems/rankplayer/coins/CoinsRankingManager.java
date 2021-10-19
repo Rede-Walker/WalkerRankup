@@ -1,6 +1,6 @@
-package br.com.redewalker.rankup.manager;
+package br.com.redewalker.rankup.systems.rankplayer.coins;
 
-import br.com.redewalker.rankup.objects.CoinsRanking;
+import br.com.redewalker.rankup.systems.rankplayer.coins.CoinsRanking;
 import lombok.Getter;
 
 import java.util.ArrayList;

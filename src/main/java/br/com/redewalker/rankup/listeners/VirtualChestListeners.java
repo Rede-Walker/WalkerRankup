@@ -1,8 +1,8 @@
 package br.com.redewalker.rankup.listeners;
 
 import br.com.redewalker.rankup.Rankup;
-import br.com.redewalker.rankup.objects.RankPlayer;
-import br.com.redewalker.rankup.objects.VirtualChest;
+import br.com.redewalker.rankup.systems.rankplayer.RankPlayer;
+import br.com.redewalker.rankup.systems.virtualchests.VirtualChest;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

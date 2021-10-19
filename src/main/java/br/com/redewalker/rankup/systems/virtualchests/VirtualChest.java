@@ -1,7 +1,7 @@
-package br.com.redewalker.rankup.objects;
+package br.com.redewalker.rankup.systems.virtualchests;
 
 import br.com.redewalker.rankup.Rankup;
-import br.com.redewalker.rankup.objects.enums.VirtualChestType;
+import br.com.redewalker.rankup.systems.virtualchests.enums.VirtualChestType;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

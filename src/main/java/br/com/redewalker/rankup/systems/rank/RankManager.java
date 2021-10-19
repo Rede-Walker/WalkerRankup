@@ -1,12 +1,11 @@
-package br.com.redewalker.rankup.manager;
+package br.com.redewalker.rankup.systems.rank;
 
 import br.com.redewalker.api.basics.Manager;
 import br.com.redewalker.api.database.daos.MongoDBDao;
 import br.com.redewalker.api.database.exceptions.ValueNotFoundException;
 import br.com.redewalker.rankup.Rankup;
-import br.com.redewalker.rankup.dao.RankDAO;
-import br.com.redewalker.rankup.objects.Rank;
-import br.com.redewalker.rankup.objects.enums.Ranks;
+import br.com.redewalker.rankup.storage.RankDAO;
+import br.com.redewalker.rankup.systems.rank.enums.Ranks;
 import lombok.Getter;
 import lombok.SneakyThrows;
 

@@ -1,4 +1,4 @@
-package br.com.redewalker.rankup.manager;
+package br.com.redewalker.rankup.systems.virtualchests;
 
 import br.com.redewalker.rankup.Rankup;
 import lombok.Getter;

@@ -1,11 +1,12 @@
 package br.com.redewalker.rankup.commands;
 
 import br.com.redewalker.api.commands.Command;
+import br.com.redewalker.api.systems.messages.MessageManager;
+import br.com.redewalker.api.systems.messages.enums.Messages;
 import br.com.redewalker.rankup.Rankup;
-import br.com.redewalker.rankup.inventories.VirtualChestInventory;
-import br.com.redewalker.rankup.objects.RankPlayer;
-import br.com.redewalker.rankup.objects.VirtualChest;
-import org.bukkit.ChatColor;
+import br.com.redewalker.rankup.systems.virtualchests.inventories.VirtualChestInventory;
+import br.com.redewalker.rankup.systems.rankplayer.RankPlayer;
+import br.com.redewalker.rankup.systems.virtualchests.VirtualChest;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -20,7 +21,7 @@ public class ChestCommand extends Command {
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
 
         if(!(sender instanceof Player)){
-
+            MessageManager.instance().get(Messages.ONLY_PLAYERS_CAN).send(sender);
             return true;
         }
 
@@ -31,24 +32,45 @@ public class ChestCommand extends Command {
         }
 
         String a = args[0];
+
         int id;
 
         try{
             id = Integer.parseInt(a);
         }catch(NumberFormatException e){
-            player.sendMessage(ChatColor.RED + "Apenas números.");
+
+            if(player.hasPermission("walker.commands.adminchest")){
+
+                RankPlayer rankPlayerTarget = Rankup.getRankup().getRankPlayerManager().getRankupPlayer(a);
+                if(rankPlayerTarget == null){
+                    MessageManager.instance().get(Messages.PLAYER_NOT_FOUND).send(player);
+                    return true;
+                }
+
+                if(args.length == 1){
+
+                    // OPEN INVENTORY AS TARGET;
+                    return true;
+                }
+
+
+
+                return true;
+            }
+
+            MessageManager.instance().messageCustom("<error>Apenas números.").send(player);
             return true;
         }
 
         RankPlayer rankPlayer = Rankup.getRankup().getRankPlayerManager().getRankupPlayer(player.getName());
         if(rankPlayer.getVirtualChests().isEmpty()){
-            player.sendMessage(ChatColor.RED + "Você ainda não possui um baú virtual, adquira um pelo menu em /baus.");
+            MessageManager.instance().messageCustom("<error>Você ainda não possui um baú virtual, adquira um pelo menu em /baus.").send(player);
             return true;
         }
 
         VirtualChest virtualChest = getByID(id, rankPlayer);
         if(virtualChest == null){
-            player.sendMessage(ChatColor.RED + "Você não possui o baú #" + id + "!");
+            MessageManager.instance().messageCustom("<error>Você não possui o baú #" + id + ".").send(player);
         }else{
             player.openInventory(virtualChest.getInventory());
         }
