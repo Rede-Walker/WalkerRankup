@@ -1,6 +1,8 @@
 package br.com.redewalker.rankup.commands;
 
 import br.com.redewalker.api.commands.Command;
+import br.com.redewalker.api.systems.messages.MessageManager;
+import br.com.redewalker.api.systems.messages.enums.Messages;
 import br.com.redewalker.rankup.Rankup;
 import br.com.redewalker.rankup.systems.rankplayer.coins.CoinsRanking;
 import br.com.redewalker.rankup.systems.rankplayer.RankPlayer;
@@ -25,7 +27,7 @@ public class CoinsCommand extends Command {
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
 
         if(!(sender instanceof Player)){
-            System.out.println("Apenas in-game!");
+            MessageManager.instance().get(Messages.ONLY_PLAYERS_CAN).send(sender);
             return true;
         }
 
@@ -49,45 +51,45 @@ public class CoinsCommand extends Command {
             String target = args[1];
             RankPlayer rankupplayerTarget = main.getRankPlayerManager().getRankupPlayer(target);
             if(rankupplayerTarget == null){
-                player.sendMessage(ChatColor.RED + "Jogador não encontrado!");
+                MessageManager.instance().get(Messages.PLAYER_NOT_FOUND).send(player);
                 return true;
             }
 
             if(rankupplayerTarget.getName().equalsIgnoreCase(player.getName())){
-                player.sendMessage(ChatColor.RED + "O jogador informado não pode ser você.");
+                MessageManager.instance().messageCustom(ChatColor.RED + "O jogador alvo não pode ser você!").send(player);
                 return true;
             }
 
             if(!rankupplayerTarget.getPreferences().get(Preference.RECEIVE_COINS)){
-                player.sendMessage(ChatColor.RED + "O jogador informado desativou o recebimento de coins.");
+                MessageManager.instance().messageCustom(ChatColor.RED + "O jogador informado desativou o recebimento de coins.").send(player);
                 return true;
             }
 
             if(!isNumber(args[2])){
-                player.sendMessage(ChatColor.RED + "Número inválido.");
+                MessageManager.instance().messageCustom(ChatColor.RED + "Número inválido.").send(player);
                 return true;
             }
 
             double coins = Double.parseDouble(args[2]);
 
             if(coins <= 0){
-                player.sendMessage(ChatColor.RED + "O valor informado deve ser maior que 0.");
+                MessageManager.instance().messageCustom(ChatColor.RED + "O valor informado deve ser maior que 0.").send(player);
                 return true;
             }
 
 
             if(rankPlayer.getCoins() < coins){
-                player.sendMessage(ChatColor.RED + "Saldo insuficiente.");
+                MessageManager.instance().messageCustom(ChatColor.RED + "Saldo insuficiente.").send(player);
                 return true;
             }
 
             rankPlayer.removeCoins(coins);
             rankupplayerTarget.addCoins(coins);
-            player.sendMessage(ChatColor.GREEN + "Você enviou " + ChatColor.WHITE + format(coins) + ChatColor.GREEN + " coins ao jogador " + ChatColor.WHITE +
-                    rankupplayerTarget.getName() + ChatColor.GREEN + ".");
-            if(Bukkit.getPlayer(rankupplayerTarget.getName()) != null) Bukkit.getPlayer(rankupplayerTarget.getName()).sendMessage(
+            MessageManager.instance().messageCustom(ChatColor.GREEN + "Você enviou " + ChatColor.WHITE + format(coins) + ChatColor.GREEN + " coins ao jogador " + ChatColor.WHITE +
+                    rankupplayerTarget.getName() + ChatColor.GREEN + ".").send(player);
+            if(Bukkit.getPlayer(rankupplayerTarget.getName()) != null) MessageManager.instance().messageCustom(
                     ChatColor.GREEN + "Você recebeu " + ChatColor.WHITE + format(rankupplayerTarget.getCoins()) +
-                            ChatColor.GREEN + " coins do jogador " + ChatColor.WHITE + player.getName() + ChatColor.GREEN + ".");
+                            ChatColor.GREEN + " coins do jogador " + ChatColor.WHITE + player.getName() + ChatColor.GREEN + ".").send(Bukkit.getPlayer(rankupplayerTarget.getName()));
 
         }else if(args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("ajuda")){
 
@@ -105,131 +107,131 @@ public class CoinsCommand extends Command {
 
             // SET SUBCOMMAND
             if(!player.hasPermission("walker.rankup.manageeconomy")){
-                player.sendMessage(ChatColor.RED + "Você não possui permissões!");
+                MessageManager.instance().get(Messages.WITHOUT_PERMISSION).send(player);
                 return true;
             }
 
             if(args.length != 3){
-                player.sendMessage(ChatColor.RED + "Formato incorreto! Utilize /coins set <nick> <quantia>.");
+                MessageManager.instance().messageCustom(ChatColor.RED + "Formato incorreto! Utilize /coins set <nick> <quantia>.").send(player);
                 return true;
             }
 
             String target = args[1];
             RankPlayer rankupplayerTarget = main.getRankPlayerManager().getRankupPlayer(target);
             if(rankupplayerTarget == null){
-                player.sendMessage(ChatColor.RED + "Jogador não encontrado!");
+                MessageManager.instance().get(Messages.PLAYER_NOT_FOUND).send(player);
                 return true;
             }
 
             if(!isNumber(args[2])){
-                player.sendMessage(ChatColor.RED + "Número inválido.");
+                MessageManager.instance().messageCustom(ChatColor.RED + "Número inválido.").send(player);
                 return true;
             }
 
             double coins = Double.parseDouble(args[2]);
 
             if(coins < 0){
-                player.sendMessage(ChatColor.RED + "O valor informado deve ser maior ou igual a 0.");
+                MessageManager.instance().messageCustom(ChatColor.RED + "O valor informado deve ser maior ou igual a 0.").send(player);
                 return true;
             }
 
             rankupplayerTarget.setCoins(coins);
-            player.sendMessage(ChatColor.GREEN + "Você definiu as coins de " + ChatColor.WHITE + rankupplayerTarget.getName()
-                    + ChatColor.GREEN + " para " + ChatColor.WHITE + NumberFormat.getInstance().format(rankupplayerTarget.getCoins()) + ChatColor.GREEN + ".");
-            if(Bukkit.getPlayer(rankupplayerTarget.getName()) != null) Bukkit.getPlayer(rankupplayerTarget.getName()).sendMessage(
+            MessageManager.instance().messageCustom(ChatColor.GREEN + "Você definiu as coins de " + ChatColor.WHITE + rankupplayerTarget.getName()
+                    + ChatColor.GREEN + " para " + ChatColor.WHITE + NumberFormat.getInstance().format(rankupplayerTarget.getCoins()) + ChatColor.GREEN + ".").send(player);
+            if(Bukkit.getPlayer(rankupplayerTarget.getName()) != null) MessageManager.instance().messageCustom(
                     ChatColor.GREEN + "Suas coins foram definidas para " + ChatColor.WHITE + NumberFormat.getInstance().format(rankupplayerTarget.getCoins()) +
-                            ChatColor.GREEN + ".");
+                            ChatColor.GREEN + ".").send(Bukkit.getPlayer(rankupplayerTarget.getName()));
 
         }else if(args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("adicionar")){
 
             // ADD SUBCOMMAND
             if(!player.hasPermission("walker.rankup.manageeconomy")){
-                player.sendMessage(ChatColor.RED + "Você não possui permissões!");
+                MessageManager.instance().get(Messages.WITHOUT_PERMISSION).send(player);
                 return true;
             }
 
             if(args.length != 3){
-                player.sendMessage(ChatColor.RED + "Formato incorreto! Utilize /coins set <nick> <quantia>.");
+                MessageManager.instance().messageCustom(ChatColor.RED + "Formato incorreto! Utilize /coins set <nick> <quantia>.").send(player);
                 return true;
             }
 
             String target = args[1];
             RankPlayer rankupplayerTarget = main.getRankPlayerManager().getRankupPlayer(target);
             if(rankupplayerTarget == null){
-                player.sendMessage(ChatColor.RED + "Jogador não encontrado!");
+                MessageManager.instance().get(Messages.PLAYER_NOT_FOUND).send(player);
                 return true;
             }
 
             if(!isNumber(args[2])){
-                player.sendMessage(ChatColor.RED + "Número inválido.");
+                MessageManager.instance().messageCustom(ChatColor.RED + "Número inválido.").send(player);
                 return true;
             }
 
             double coins = Double.parseDouble(args[2]);
 
             if(coins <= 0){
-                player.sendMessage(ChatColor.RED + "O valor informado deve ser maior que 0.");
+                MessageManager.instance().messageCustom(ChatColor.RED + "O valor informado deve ser maior que 0.").send(player);
                 return true;
             }
 
 
             rankupplayerTarget.addCoins(coins);
-            player.sendMessage(ChatColor.GREEN + "Você adicionou " + ChatColor.WHITE + format(coins) + ChatColor.GREEN + " coins ao jogador " +
-                    ChatColor.WHITE + rankupplayerTarget.getName() + ChatColor.GREEN + ".");
-            if(Bukkit.getPlayer(rankupplayerTarget.getName()) != null) Bukkit.getPlayer(rankupplayerTarget.getName()).sendMessage(
+            MessageManager.instance().messageCustom(ChatColor.GREEN + "Você adicionou " + ChatColor.WHITE + format(coins) + ChatColor.GREEN + " coins ao jogador " +
+                    ChatColor.WHITE + rankupplayerTarget.getName() + ChatColor.GREEN + ".").send(player);
+            if(Bukkit.getPlayer(rankupplayerTarget.getName()) != null) MessageManager.instance().messageCustom(
                     ChatColor.GREEN + "Foram adicionados " + ChatColor.WHITE + NumberFormat.getInstance().format(rankupplayerTarget.getCoins()) +
-                            ChatColor.GREEN + " coins na sua conta.");
+                            ChatColor.GREEN + " coins na sua conta.").send(Bukkit.getPlayer(rankupplayerTarget.getName()));
 
         }else if(args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("remover")) {
 
             // REMOVE SUBCOMMAND
             if(!player.hasPermission("walker.rankup.manageeconomy")){
-                player.sendMessage(ChatColor.RED + "Você não possui permissões!");
+                MessageManager.instance().get(Messages.WITHOUT_PERMISSION).send(player);
                 return true;
             }
 
 
             if(args.length != 3){
-                player.sendMessage(ChatColor.RED + "Formato incorreto! Utilize /coins set <nick> <quantia>.");
+                MessageManager.instance().messageCustom(ChatColor.RED + "Formato incorreto! Utilize /coins set <nick> <quantia>.").send(player);
                 return true;
             }
 
             String target = args[1];
             RankPlayer rankupplayerTarget = main.getRankPlayerManager().getRankupPlayer(target);
             if(rankupplayerTarget == null){
-                player.sendMessage(ChatColor.RED + "Jogador não encontrado!");
+                MessageManager.instance().get(Messages.PLAYER_NOT_FOUND).send(player);
                 return true;
             }
 
             if(!isNumber(args[2])){
-                player.sendMessage(ChatColor.RED + "Número inválido.");
+                MessageManager.instance().messageCustom(ChatColor.RED + "Número inválido.").send(player);
                 return true;
             }
 
             double coins = Double.parseDouble(args[2]);
 
             if(coins <= 0){
-                player.sendMessage(ChatColor.RED + "O valor informado deve ser maior que 0.");
+                MessageManager.instance().messageCustom(ChatColor.RED + "O valor informado deve ser maior que 0.").send(player);
                 return true;
             }
 
             rankupplayerTarget.removeCoins(coins);
-            player.sendMessage(ChatColor.GREEN + "Você removeu " + ChatColor.WHITE + format(coins) + ChatColor.GREEN + " coins do jogador " +
-                    ChatColor.WHITE + rankupplayerTarget.getName() + ChatColor.GREEN + ".");
-            if(Bukkit.getPlayer(rankupplayerTarget.getName()) != null) Bukkit.getPlayer(rankupplayerTarget.getName()).sendMessage(
+            MessageManager.instance().messageCustom(ChatColor.GREEN + "Você removeu " + ChatColor.WHITE + format(coins) + ChatColor.GREEN + " coins do jogador " +
+                    ChatColor.WHITE + rankupplayerTarget.getName() + ChatColor.GREEN + ".").send(player);
+            if(Bukkit.getPlayer(rankupplayerTarget.getName()) != null) MessageManager.instance().messageCustom(
                     ChatColor.GREEN + "Foram removidos " + ChatColor.WHITE + NumberFormat.getInstance().format(rankupplayerTarget.getCoins()) +
-                            ChatColor.GREEN + " coins da sua conta.");
+                            ChatColor.GREEN + " coins da sua conta.").send(player);
 
         }else if(args[0].equalsIgnoreCase("loadtop") || args[0].equalsIgnoreCase("carregartop")){
 
             // LOADTOP SUBCOMMAND
             if(!player.hasPermission("walker.rankup.manageeconomy")){
-                player.sendMessage(ChatColor.RED + "Você não possui permissões!");
+                MessageManager.instance().get(Messages.WITHOUT_PERMISSION).send(player);
                 return true;
             }
 
             main.updateCoinsRanking();
-            player.sendMessage(ChatColor.GREEN + "Top de coins atualizado!");
+            MessageManager.instance().messageCustom(ChatColor.GREEN + "Top de coins atualizado!").send(player);
 
         }else{
 
@@ -237,11 +239,11 @@ public class CoinsCommand extends Command {
             String target = args[0];
             RankPlayer rankupplayerTarget = main.getRankPlayerManager().getRankupPlayer(target);
             if(rankupplayerTarget == null){
-                player.sendMessage(ChatColor.RED + "Jogador não encontrado!");
+                MessageManager.instance().get(Messages.PLAYER_NOT_FOUND).send(player);
                 return true;
             }
 
-            player.sendMessage(ChatColor.GREEN + "Coins de " + rankupplayerTarget.getName() + ": " + ChatColor.WHITE + NumberFormat.getInstance().format(rankupplayerTarget.getCoins()));
+            MessageManager.instance().messageCustom(ChatColor.GREEN + "Coins de " + rankupplayerTarget.getName() + ": " + ChatColor.WHITE + NumberFormat.getInstance().format(rankupplayerTarget.getCoins())).send(player);
 
         }
 
