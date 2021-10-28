@@ -3,10 +3,11 @@ package br.com.redewalker.rankup.systems.rankplayer;
 import br.com.redewalker.api.database.models.annotations.Key;
 import br.com.redewalker.api.database.models.annotations.Storable;
 import br.com.redewalker.rankup.Rankup;
+import br.com.redewalker.rankup.systems.rank.Rank;
 import br.com.redewalker.rankup.systems.rankplayer.coins.CoinsRanking;
 import br.com.redewalker.rankup.systems.rank.enums.Attribute;
 import br.com.redewalker.rankup.systems.rankplayer.enums.Preference;
-import br.com.redewalker.rankup.systems.rank.Rank;
+import br.com.redewalker.rankup.systems.rankplayer.exceptions.RankupException;
 import br.com.redewalker.rankup.systems.virtualchests.VirtualChest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +29,7 @@ public class RankPlayer {
     @Builder.Default private double coins = 0;
     @Builder.Default private double rankpoints = 0;
     @Builder.Default private List<VirtualChest> virtualChests = new ArrayList<>();
-    private Rank rank;
+    private int rank;
     private HashMap<Preference, Boolean> preferences;
     private HashMap<Attribute, Integer> attributes;
     @Setter private transient CoinsRanking ranking;
@@ -96,14 +97,18 @@ public class RankPlayer {
         save();
     }
 
-    public boolean rankup(){
-        if(Rankup.getRankup().getRankManager().isLastRank(this.rank)) return false;
-        if(Rankup.getRankup().getRankManager().getNextRank(this.rank).getCost() > this.rankpoints) return false;
-        Rank nextRank = Rankup.getRankup().getRankManager().getNextRank(this.rank);
-        this.rank = nextRank;
+    public Rank getRank() {
+        return Rankup.getRankup().getRankManager().getRank(this.rank);
+    }
+
+    public void rankup() throws RankupException {
+        if(Rankup.getRankup().getRankManager().isLastRank(getRank())) throw new RankupException("Você já chegou ao último rank.");
+        if(Rankup.getRankup().getRankManager().getNextRank(getRank()).getCost() > this.rankpoints) throw new RankupException("Você não possui pontos de rank necessários para upar.");
+
+        Rank nextRank = Rankup.getRankup().getRankManager().getNextRank(getRank());
+        this.rank = nextRank.getPosition();
         save();
 
-        return true;
     }
 
     public void save(){

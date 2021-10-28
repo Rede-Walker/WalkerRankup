@@ -3,7 +3,9 @@ package br.com.redewalker.rankup;
 import br.com.redewalker.api.API;
 import br.com.redewalker.rankup.commands.ChestCommand;
 import br.com.redewalker.rankup.commands.CoinsCommand;
+import br.com.redewalker.rankup.commands.RankupCommand;
 import br.com.redewalker.rankup.listeners.JoinEvents;
+import br.com.redewalker.rankup.listeners.RankupListener;
 import br.com.redewalker.rankup.listeners.VirtualChestListeners;
 import br.com.redewalker.rankup.systems.rankplayer.coins.CoinsRankingManager;
 import br.com.redewalker.rankup.systems.rank.RankManager;
@@ -43,6 +45,8 @@ public final class Rankup extends JavaPlugin {
 
         new ChestCommand();
         new CoinsCommand(this);
+        new RankupCommand();
+        Bukkit.getPluginManager().registerEvents(new RankupListener(), this);
         Bukkit.getPluginManager().registerEvents(new JoinEvents(), this);
         Bukkit.getPluginManager().registerEvents(new VirtualChestListeners(), this);
     }

@@ -39,7 +39,9 @@ public class RankManager extends Manager<Rank, Rankup> {
 
     public boolean isLastRank(Rank rank){
         int nextRank = rank.getPosition() + 1;
-        return ranks.get(nextRank) == null;
+        if(nextRank == ranks.size()) return true;
+        Rank rankNext = ranks.get(nextRank);
+        return rankNext == null;
     }
 
     public Rank getNextRank(Rank rank){
@@ -56,7 +58,7 @@ public class RankManager extends Manager<Rank, Rankup> {
         if (ranks.isEmpty() || ranks.get(rankPosition) == null) {
             Rank rank;
             try {
-                rank = getRank(rankPosition);
+                rank = this.rankDAO.find(this.rankDAO.getData().getKey(Rank.builder().position(rankPosition).build()));
             } catch (ValueNotFoundException e) {
                 rank = Rank.builder()
                         .position(rankPosition)
@@ -73,8 +75,8 @@ public class RankManager extends Manager<Rank, Rankup> {
         }
     }
 
-    public Rank getRank(int rankPosition) throws ValueNotFoundException {
-        return this.rankDAO.find(this.rankDAO.getData().getKey(Rank.builder().position(rankPosition).build()));
+    public Rank getRank(int position){
+        return this.ranks.get(position);
     }
 
     @Override

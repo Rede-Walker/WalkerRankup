@@ -5,11 +5,13 @@ import br.com.redewalker.api.database.daos.MongoDBDao;
 import br.com.redewalker.api.database.exceptions.ValueNotFoundException;
 import br.com.redewalker.rankup.Rankup;
 import br.com.redewalker.rankup.storage.RankPlayerDAO;
+import br.com.redewalker.rankup.systems.rank.enums.Attribute;
 import br.com.redewalker.rankup.systems.rankplayer.enums.Preference;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -50,7 +52,8 @@ public class RankPlayerManager extends Manager<RankPlayer, Rankup> {
             rankPlayer = RankPlayer.builder()
                     .name(nickname)
                     .preferences(hashmap)
-                    .rank(Rankup.getRankup().getRankManager().getDefaultRank())
+                    .rank(0)
+                    .attributes(getNewAttributeMap())
                     .build();
             this.dao.createObject(rankPlayer);
         }
@@ -97,5 +100,11 @@ public class RankPlayerManager extends Manager<RankPlayer, Rankup> {
     @Override
     public MongoDBDao<RankPlayer> getDao() {
         return this.dao;
+    }
+
+    private HashMap<Attribute, Integer> getNewAttributeMap(){
+        HashMap<Attribute, Integer> map = new HashMap<>();
+        Arrays.stream(Attribute.values()).forEach(r-> map.put(r, 1));
+        return map;
     }
 }
